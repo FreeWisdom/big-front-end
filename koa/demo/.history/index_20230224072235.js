@@ -24,7 +24,7 @@ router.get('/', (ctx, next) => {
 
 router.get('/b', (ctx, next) => {
     ctx.body = {
-        name: 'thales',
+        name: 'thale',
         age: '20',
     }
 })

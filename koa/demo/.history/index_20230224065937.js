@@ -1,12 +1,10 @@
 const cors = require("@koa/cors");
 const Koa = require("koa");
 const { default: koaBody } = require("koa-body");
-const Json = require("koa-json");
 const Router = require('koa-router');
 
 const app = new Koa();
 const router = new Router();
-router.prefix('/api');  // 前端所有的请求前必须为localhost:3000/api/post
 
 // 1、req,method,res
 // ctx 是一个对象，里面有 request、response、app、originalUrl、req、res、socket
@@ -18,15 +16,12 @@ router.prefix('/api');  // 前端所有的请求前必须为localhost:3000/api/p
 // 2、api url 执行特定 router
 // router 实现不同请求路径
 router.get('/', (ctx, next) => {
-    const params = ctx.request.query;   // ctx.request.query 获取 get 请求参数
-    ctx.body = { name: params.name, age: params.age }
+    ctx.body = "router a"
+    console.log(ctx, next)
 })
 
 router.get('/b', (ctx, next) => {
-    ctx.body = {
-        name: 'thales',
-        age: '20',
-    }
+    ctx.body = "router b"
 })
 
 // 3、koa最核心：app.use 拿着 ctx 在做什么?
@@ -47,13 +42,11 @@ router.get('/async', async (ctx, next) => {
 })
 
 // 5、restful api
-// 使用postman模拟请求localhost:3000
-// 下面代码接受到请求后，处理req为res，用ctx.body返回给postman
 router.post('/post', async (ctx) => {
     let { body } = ctx.request;   // 用户传来的body
     console.log("body", body);
     ctx.body = {     // 返回给用户的body
-        res: "hy",
+        req: "hy",
         ...body
     }
 })
@@ -62,7 +55,6 @@ router.post('/post', async (ctx) => {
 app
     .use(koaBody())
     .use(cors())
-    .use(Json({ pretty: false, param: 'pretty' }))
     .use(router.routes())
     .use(router.allowedMethods()) // 拦截器
 app.listen(3000);

@@ -19,14 +19,12 @@ router.prefix('/api');  // 前端所有的请求前必须为localhost:3000/api/p
 // router 实现不同请求路径
 router.get('/', (ctx, next) => {
     const params = ctx.request.query;   // ctx.request.query 获取 get 请求参数
-    ctx.body = { name: params.name, age: params.age }
+    ctx.body = `router a ${params.name}: ${params.age}`
+    console.log(ctx, next, params)
 })
 
 router.get('/b', (ctx, next) => {
-    ctx.body = {
-        name: 'thales',
-        age: '20',
-    }
+    ctx.body = "router b"
 })
 
 // 3、koa最核心：app.use 拿着 ctx 在做什么?
@@ -62,7 +60,7 @@ router.post('/post', async (ctx) => {
 app
     .use(koaBody())
     .use(cors())
-    .use(Json({ pretty: false, param: 'pretty' }))
+    .use(Json({pretty: false, param: 'pretty'}))
     .use(router.routes())
     .use(router.allowedMethods()) // 拦截器
 app.listen(3000);
